@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>FileReader的介绍与使用</title>
+		<link rel="stylesheet" href="../css/style.css" />
+		<style>
+			.avater {
+				width: 120px;
+				height: 120px;
+				position: relative;
+				box-shadow: 1px 1px 10px #000;
+			}
+			.avater img {
+				width: 100%;
+				height: 100%;
+			}
+			.avater:hover .overlay {
+				display: block;
+			}
+			.overlay {
+				width: 120px;
+				height: 120px;
+				position: absolute;
+				left: 0;
+				top: 0;
+				color: #fff;
+				background: rgba(0,0,0,0.4);
+				display: none;
+				text-align: center;
+				line-height: 120px;
+				cursor: pointer;
+			}
+			#avater {
+				display: none;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<h1>fileReader实现图片的本地预览</h1>
+			<div class="avater">
+				<img src="http://via.placeholder.com/120x120" />
+				<div class="overlay">选择图片</div>
+				<input type="file" id="avater" accept="image/*"/>
+			</div>
+		</div>
+		<script type="text/javascript" src="../js/jquery-2.1.0.js" ></script>
+		<script>
+			$(function(){				
+			//	点击遮罩触发文件上传
+				$(".overlay").click(function(){
+					$("#avater").trigger("click");
+				})
+				$("#avater").change(function(){
+			//		1、自己写
+//					let reader = new FileReader();
+//					console.dir(this);
+//					reader.readAsDataURL(this.files[0]);
+//					reader.onload = function() {
+//						$(".avater img").attr("src", reader.result);
+//					}
+            //		2、调用封装的函数实现
+					readFile(this.files[0], new FileReader(), result => {
+						$(".avater img").attr("src", result)
+					})
+				})
+				
+			//	封装成回调函数
+				function readFile(file, reader, callback) {
+					reader.readAsDataURL(file);
+					reader.onload = () => {
+						callback(reader.result);
+					}
+				}
+			})
+		</script>
+	</body>
+</html>
